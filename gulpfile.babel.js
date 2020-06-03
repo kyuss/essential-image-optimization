@@ -99,9 +99,9 @@ gulp.task('styles', () => {
   ])
     .pipe($.newer('.tmp/styles'))
     .pipe($.sourcemaps.init())
-    .pipe($.sass({
-      precision: 10
-    }).on('error', $.sass.logError))
+    // .pipe($.sass({
+    //   precision: 10
+    // }).on('error', $.sass.logError))
     .pipe($.autoprefixer(AUTOPREFIXER_BROWSERS))
     .pipe(gulp.dest('.tmp/styles'))
     // Remove unused styles with UnCSS
