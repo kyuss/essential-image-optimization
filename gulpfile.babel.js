@@ -62,7 +62,7 @@ gulp.task('images', () =>
         multipass: true
       })
     ])))
-    .pipe(gulp.dest('dist/images'))
+    .pipe(gulp.dest('docs/images'))
     .pipe($.size({title: 'images'}))
 );
 
@@ -71,10 +71,10 @@ gulp.task('copy', () =>
   gulp.src([
     'app/*',
     '!app/*.html',
-    'node_modules/apache-server-configs/dist/.htaccess'
+    'node_modules/apache-server-configs/docs/.htaccess'
   ], {
     dot: true
-  }).pipe(gulp.dest('dist'))
+  }).pipe(gulp.dest('docs'))
     .pipe($.size({title: 'copy'}))
 );
 
@@ -106,7 +106,7 @@ gulp.task('styles', () => {
     .pipe(gulp.dest('.tmp/styles'))
     // Remove unused styles with UnCSS
     .pipe($.if('*.css', $.uncss({
-      html: ['dist/*.html']
+      html: ['docs/*.html']
     })))
     // Minify and optimize styles with cssnano
     .pipe($.if('*.css', $.cssnano()))
@@ -114,7 +114,7 @@ gulp.task('styles', () => {
     .pipe($.if('*.css', $.concat('main.css')))
     .pipe($.size({title: 'styles'}))
     .pipe($.sourcemaps.write('./'))
-    .pipe(gulp.dest('dist/styles'))
+    .pipe(gulp.dest('docs/styles'))
     .pipe(gulp.dest('.tmp/styles'));
 });
 
@@ -140,7 +140,7 @@ gulp.task('scripts', () =>
       // Output files
       .pipe($.size({title: 'scripts'}))
       .pipe($.sourcemaps.write('.'))
-      .pipe(gulp.dest('dist/scripts'))
+      .pipe(gulp.dest('docs/scripts'))
       .pipe(gulp.dest('.tmp/scripts'))
 );
 
@@ -153,7 +153,7 @@ gulp.task('markdown', () => {
     // Rename this output to book.html
     .pipe(rename('book.html'))
     .pipe(gulp.dest('.tmp'))
-    .pipe(gulp.dest('dist'));
+    .pipe(gulp.dest('docs'));
 });
 
 // Scan your HTML for assets & optimize them
@@ -198,11 +198,11 @@ gulp.task('html', () => {
       minify: true
     }))
     .on('error', (err) => util.log(util.colors.red(err.message)))
-    .pipe(gulp.dest('dist'));
+    .pipe(gulp.dest('docs'));
 });
 
 // Clean output directory
-gulp.task('clean', () => del(['.tmp', 'dist/*', 'app/third_party/', '!dist/.git'], {dot: true}));
+gulp.task('clean', () => del(['.tmp', 'docs/*', 'app/third_party/', '!docs/.git'], {dot: true}));
 
 // Watch files for changes & reload
 gulp.task('serve', ['scripts', 'styles', 'html'], () => {
@@ -226,7 +226,7 @@ gulp.task('serve', ['scripts', 'styles', 'html'], () => {
 });
 
 // Build and serve the output from the dist build
-gulp.task('serve:dist', ['default'], () =>
+gulp.task('serve:docs', ['default'], () =>
   browserSync({
     notify: false,
     logPrefix: 'WSK',
@@ -236,7 +236,7 @@ gulp.task('serve:dist', ['default'], () =>
     // Note: this uses an unsigned certificate which on first access
     //       will present a certificate warning in the browser.
     // https: true,
-    server: 'dist',
+    server: 'docs',
     port: 3001
   })
 );
@@ -263,7 +263,7 @@ gulp.task('generate-pdf', async() => {
     });
     await timeout(10000);
 
-    await page.pdf({path: 'dist/book.pdf', format: 'A4'});
+    await page.pdf({path: 'docs/book.pdf', format: 'A4'});
     browser.close();
 });
 
@@ -291,12 +291,12 @@ gulp.task('pagespeed', cb =>
 // See http://www.html5rocks.com/en/tutorials/service-worker/introduction/ for
 // an in-depth explanation of what service workers are and why you should care.
 // Generate a service worker file that will provide offline functionality for
-// local resources. This should only be done for the 'dist' directory, to allow
+// local resources. This should only be done for the 'docs' directory, to allow
 // live reload to work as expected when serving from the 'app' directory.
 gulp.task('generate-service-worker', () => {
   return workboxBuild.generateSW({
-    swDest: `dist/service-worker.js`,
-    globDirectory: `dist/`,
+    swDest: `docs/service-worker.js`,
+    globDirectory: `docs/`,
     // Add/remove glob patterns to match your directory setup.
     globPatterns: [
       `images/**/*.svg`,

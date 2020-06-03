@@ -1,6 +1,8 @@
 # build
+dist
 tmp
 .tmp
+.DS_Store
 app/third_party/workbox-sw/workbox-sw.dev.js
 
 # Logs
